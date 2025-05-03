@@ -9,7 +9,17 @@ import {console2} from "forge-std/console2.sol";
 contract DeployMoodNFT is Script {
     MoodNFT public moodNFT;
 
-    function run() external returns (MoodNFT) {}
+    function run() external returns (MoodNFT) {
+        string memory sadSvg = vm.readFile("./img/sad.svg");
+        string memory happySvg = vm.readFile("./img/happy.svg");
+
+        vm.startBroadcast();
+        // encode the SVG images to base64 format before passing them to the constructor
+        moodNFT = new MoodNFT(svgToImageURI(sadSvg), svgToImageURI(happySvg));
+        vm.stopBroadcast();
+
+        return moodNFT;
+    }
 
     function svgToImageURI(
         string memory svg

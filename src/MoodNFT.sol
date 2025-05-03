@@ -14,8 +14,8 @@ contract MoodNFT is ERC721 {
     error MoodNFT__NotApprovedOrOwner();
 
     uint256 private s_tokenCounter; // Counter for the number of NFTs minted
-    string private s_sadSVGImageURI; // URI for the sad SVG image
-    string private s_happySVGImageURI; // URI for the happy SVG image
+    string private s_sadSVGImageURI; // URI for the sad SVG image in base64 format
+    string private s_happySVGImageURI; // URI for the happy SVG image in base64 format
 
     /**
      * @dev Enum representing the mood of the NFT. The mood can be either SAD or HAPPY.
@@ -37,8 +37,8 @@ contract MoodNFT is ERC721 {
      * The constructor also sets the initial mood of the first NFT to HAPPY.
      */
     constructor(
-        string memory _sadSVGImageURI,
-        string memory _happySVGImageURI
+        string memory _sadSVGImageURI, // base64 encoded sad SVG image URI
+        string memory _happySVGImageURI // base64 encoded happy SVG image URI
     ) ERC721("Mood NFT", "MN") {
         s_tokenCounter = 0;
         s_sadSVGImageURI = _sadSVGImageURI;
