@@ -4,7 +4,15 @@ pragma solidity ^0.8.25;
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {Base64} from "@openzeppelin/contracts/utils/Base64.sol";
 
+/***
+ * @dev This contract is an ERC721 token that represents a mood NFT.
+ * The contract allows users to mint NFTs and set their mood to either SAD or HAPPY.
+ * The mood is represented by a SVG image, which is stored as a URI.
+ */
 contract MoodNFT is ERC721 {
+    // errors
+    error MoodNFT__NotApprovedOrOwner();
+
     uint256 private s_tokenCounter; // Counter for the number of NFTs minted
     string private s_sadSVGImageURI; // URI for the sad SVG image
     string private s_happySVGImageURI; // URI for the happy SVG image
@@ -88,5 +96,25 @@ contract MoodNFT is ERC721 {
                     )
                 )
             );
+    }
+
+    /**
+     * @dev This function allows the owner of the NFT to set the mood of the NFT.
+     * @param tokenId The ID of the NFT whose mood is to be set
+     */
+    function flipMood(uint256 tokenId) public {
+        // Check if the caller is the owner of the NFT
+        if (
+            getApproved(tokenId) != msg.sender && ownerOf(tokenId) != msg.sender
+        ) {
+            revert MoodNFT__NotApprovedOrOwner();
+        }
+
+        // Flip the mood of the NFT
+        if (s_tokenIdToMood[tokenId] == Mood.SAD) {
+            s_tokenIdToMood[tokenId] = Mood.HAPPY;
+        } else {
+            s_tokenIdToMood[tokenId] = Mood.SAD;
+        }
     }
 }
